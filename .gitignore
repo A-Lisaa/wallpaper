@@ -128,6 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+<<<<<<< HEAD
 # test files
 test*.py
 
@@ -142,3 +143,10 @@ logs/
 
 # profiles
 *.prof
+=======
+# vscode folder
+.vscode/
+
+# ini file
+*.ini
+>>>>>>> 44c79d61c7d35342b31373b540adf4791d253948
