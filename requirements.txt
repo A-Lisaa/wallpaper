@@ -1,0 +1,4 @@
+numpy==1.22
+colormath==3.0.0
+pillow==9.2.0
+pyqt6==6.3.1
