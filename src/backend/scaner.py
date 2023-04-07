@@ -1,4 +1,3 @@
-import imghdr
 import os
 import re
 import shutil
@@ -10,13 +9,13 @@ from queue import Queue
 from threading import Lock, Thread
 from typing import Any, Iterable
 
+# pylint: disable=no-name-in-module, attribute-defined-outside-init
 from colormath.color_conversions import \
     convert_color as colormath_convert_color
 from colormath.color_diff import (delta_e_cie1976, delta_e_cie1994,
                                   delta_e_cie2000, delta_e_cmc)
 from colormath.color_objects import LabColor, sRGBColor
 from PIL import Image, ImageFile, UnidentifiedImageError
-# pylint: disable=no-name-in-module, attribute-defined-outside-init
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from ..utils.md5 import get_file_md5
@@ -25,7 +24,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 lock = Lock()
 
 class Scaner(QObject):
-    initialized = pyqtSignal(int)
+    initialized_signal = pyqtSignal(int)
     message_signal = pyqtSignal(str)
     image_scanned_signal = pyqtSignal(int)
 
@@ -83,7 +82,7 @@ class Scaner(QObject):
 
         return deviation_left, deviation_right
 
-    def run_thread(self):
+    def _run_thread(self):
         while not self.pics_queue.empty():
             filename = self.pics_queue.get()
             md5 = get_file_md5(filename)
@@ -188,15 +187,19 @@ class Scaner(QObject):
         self.cursor.execute("SELECT md5 FROM pictures;")
         self.existing_md5s = tuple(file[0] for file in self.cursor.fetchall())
 
-        for path, _, files in os.walk(self.settings["scan_folder"]):
-            for name in files:
-                fpath = os.path.join(path, name)
-                self.pics_queue.put(fpath)
+        if self.settings["scan_folder_subfolders"]:
+            for path, _, files in os.walk(self.settings["scan_folder"]):
+                for name in files:
+                    fpath = os.path.join(path, name)
+                    self.pics_queue.put(fpath)
+        else:
+            for file in os.listdir(self.settings["scan_folder"]):
+                self.pics_queue.put(file)
 
-        self.initialized.emit(self.pics_queue.qsize())
+        self.initialized_signal.emit(self.pics_queue.qsize())
 
         threads_amount = min(self.settings["threads_amount"], self.pics_queue.qsize())
 
         for _ in range(threads_amount):
-            thread = Thread(target=self.run_thread)
+            thread = Thread(target=self._run_thread)
             thread.start()

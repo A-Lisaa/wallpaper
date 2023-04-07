@@ -6,5 +6,12 @@
     "top_crop": 0.1,
     "bottom_crop": 0.1,
     "pixel_scan_frequency": 2,
-    "threads_amount": 12
+    "threads_amount": 12,
+    "result_copy_folder": "E:/\u042d\u0440\u043e\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0444\u043e\u0442\u043e\u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438/\u0426\u0435\u043d\u0437\u0443\u0440\u043d\u044b\u0439 \u0445\u0435\u043d\u0442\u0430\u0439/\u043f\u043e\u0442\u0430\u043d\u0446\u0435\u0432\u0430\u043b",
+    "copier_db_name": "wallpaper",
+    "sides_ratio": "16x9",
+    "whratio_deviation": "10%",
+    "minimum_width": 0,
+    "minimum_height": 0,
+    "maximum_deviation": 2
 }
